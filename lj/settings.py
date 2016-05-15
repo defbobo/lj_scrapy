@@ -16,7 +16,7 @@ NEWSPIDER_MODULE = 'lj.spiders'
 
 
 MYSQL_HOST = 'localhost'
-MYSQL_DBNAME = 'lj'
+MYSQL_DBNAME = 'lj_pudong'
 MYSQL_USER = 'root'
 MYSQL_PASSWD = 'install10'
 

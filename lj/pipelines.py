@@ -60,7 +60,7 @@ class MySQLStorePipeline(object):
 
     def process_item(self, item, spider):
         # run db query in the thread pool
-        d = self.dbpool.runInteraction(self._do_upsert, item, spider)
+        d = self.dbpool.runInteraction(self._do_insert, item, spider)
         d.addErrback(self._handle_error, item, spider)
         # at the end return the item in case of success or failure
         d.addBoth(lambda _: item)
@@ -101,6 +101,21 @@ class MySQLStorePipeline(object):
                 item['price'], now))
             spider.log("Item stored in db: %s %r" % (guid, item))
 
+    def _do_insert(self, conn, item, spider):
+        """Perform an insert or update."""
+        guid = self._get_guid(item)
+        now = datetime.utcnow().replace(microsecond=0).isoformat(' ')
+
+        inser_sql = """
+            INSERT INTO house_tmp (guid, url, location, area, layout, size,
+            buildtime, price, created)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        conn.execute(inser_sql, (guid, item['url'], item['location'],
+            item['area'], item['layout'], item['size'], item['buildtime'],
+            item['price'], now))
+        spider.log("Item stored in db: %s %r" % (guid, item))
+
     def _handle_error(self, failure, item, spider):
         """Handle occurred on db interaction."""
         # do nothing, just log
@@ -108,7 +123,7 @@ class MySQLStorePipeline(object):
 
     def _get_guid(self, item):
         """Generates an unique identifier for a given item."""
-        return md5(item['url']+item['price']).hexdigest()
+        return md5(item['url']).hexdigest()
 
     def _get_index(self, item):
         """Generates an unique identifier for a given item."""
