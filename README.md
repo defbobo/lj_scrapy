@@ -1,2 +1,2 @@
 # lj_scrapy
-Daily crawl lj_pudong house info
+日常爬取链家浦东房源数据

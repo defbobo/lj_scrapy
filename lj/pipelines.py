@@ -1,4 +1,7 @@
 from datetime import datetime
+import json
+import codecs
+from collections import OrderedDict
 from hashlib import md5, sha256
 from scrapy import log
 from scrapy.exceptions import DropItem
@@ -114,3 +117,17 @@ class MySQLStorePipeline(object):
     def _close_spider(self, spider):
         """Close dbpool connection."""
         self.dbpool.close()
+
+
+class JsonWithEncodingPipeline(object):
+
+    def __init__(self):
+        self.file = codecs.open('lj_pudong.json', 'w', encoding='utf-8')
+
+    def process_item(self, item, spider):
+        line = json.dumps(OrderedDict(item), ensure_ascii=False, sort_keys=False) + "\n"
+        self.file.write(line)
+        return item
+
+    def spider_closed(self, spider):
+        self.file.close()
