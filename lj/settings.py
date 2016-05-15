@@ -67,7 +67,7 @@ DEFAULT_REQUEST_HEADERS = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'lj.pipelines.JsonWithEncodingPipeline': 300,
+    'lj.pipelines.MySQLStorePPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
