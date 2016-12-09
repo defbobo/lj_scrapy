@@ -39,13 +39,13 @@ class LjNySpider(scrapy.Spider):
                                    ).extract()
             area = house.xpath('div/div[@class="other"]/div/a[2]/text()'
                                ).extract()
-            layout = house.xpath('div/div[@class="where"]/span/span/text()'
+            layout = house.xpath('div/div[@class="where"]/span/text()'
                                  ).extract()
             buildtime = house.xpath(
                 'div/div[@class="other"]/div/text()[last()]').extract()
             price = house.xpath('div[@class="col-3"]/div/span/text()'
                                 ).extract()
-            size = house.xpath('div/div[@class="where"]/span/text()').extract()
+            size = house.xpath('div/div[@class="where"]/span[2]/text()').extract()
             item['url'] = self.clean_item(url[0])
             item['location'] = self.clean_item(location[0])
             item['area'] = self.clean_item(area[0])
